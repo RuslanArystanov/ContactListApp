@@ -11,12 +11,7 @@ class ContactTableViewController: UITableViewController {
     
     let dataManager = DataManager()
     var person = Person()
-    
-    var setNames: Set<String> = []
-    var setSurnames: Set<String> = []
-    
-    var names: [String] = []
-    var surnames: [String] = []
+    var persons: [Person] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,10 +29,7 @@ class ContactTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "person", for: indexPath)
         var content = cell.defaultContentConfiguration()
         
-        person.name = names[indexPath.row]
-        person.surname = surnames[indexPath.row]
-        
-        content.text = person.fullName
+        content.text = persons[indexPath.row].fullName
         
         cell.contentConfiguration = content
         return cell
@@ -46,34 +38,31 @@ class ContactTableViewController: UITableViewController {
     
     // MARK: - Navigation
 
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        guard let tabBarController = segue.destination as? UITabBarController else {return}
-//        let viewControllers = tabBarController.viewControllers
-//        
-//        for VC in viewControllers! {
-//            if let fullInformationVC = VC as? FullInformationViewController {
-//                fullInformationVC.fullName = person.fullName
-//            }
-//        }
-//
-//    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let fullInformationVC = segue.destination as? FullInformationViewController else {
+            return
+        }
+        guard let index = tableView.indexPathForSelectedRow else {return}
+        
+        fullInformationVC.fullName = persons[index.row].fullName
+        fullInformationVC.phoneNumber = persons[index.row].phone
+        fullInformationVC.email = persons[index.row].email
+    }
     
 }
 
 extension ContactTableViewController {
     private func generateRandomContacts() {
-        for (name, surname) in zip(dataManager.names, dataManager.surnames) {
-        
-            setSurnames.insert(name)
-            setNames.insert(surname)
-        }
-        
-        for name in setNames {
-            names.append(name)
-        }
-        
-        for surname in setSurnames {
-            surnames.append(surname)
+        for _ in dataManager.names {
+            person = .init(
+                name: dataManager.names.randomElement() ?? "",
+                surname: dataManager.surnames.randomElement() ?? "",
+                phone: dataManager.phoneNumbers.randomElement() ?? "",
+                email: dataManager.emails.randomElement() ?? ""
+            )
+            
+            persons.append(person)
         }
     }
+
 }

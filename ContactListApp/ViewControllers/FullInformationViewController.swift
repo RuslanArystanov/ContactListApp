@@ -2,7 +2,7 @@
 //  FullInformationViewController.swift
 //  ContactListApp
 //
-//  Created by Руслан Арыстанов on 12.11.2024.
+//  Created by Руслан Арыстанов on 14.11.2024.
 //
 
 import UIKit
@@ -13,12 +13,14 @@ class FullInformationViewController: UIViewController {
     @IBOutlet var emailLabel: UILabel!
     
     var fullName = ""
-    var phone = ""
+    var phoneNumber = ""
     var email = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-    }
 
+        fullNameLabel.text = fullName
+        phoneNumberLabel.text = phoneNumber
+        emailLabel.text = email
+    }
 }
