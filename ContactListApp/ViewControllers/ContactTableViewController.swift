@@ -7,16 +7,18 @@
 
 import UIKit
 
-class ContactTableViewController: UITableViewController {
+class ContactTableViewController: UITableViewController, UITabBarControllerDelegate {
     
     let dataManager = DataManager()
     var person = Person()
     var persons: [Person] = []
+    var contactInformatios: [[String]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         generateRandomContacts()
+        getContactInfo()
+        tabBarController?.delegate = self
     }
 
     // MARK: - Table view data source
@@ -49,6 +51,13 @@ class ContactTableViewController: UITableViewController {
         fullInformationVC.email = persons[index.row].email
     }
     
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if let detailContactVC = viewController as? DetailContactTableViewController {
+            detailContactVC.persons = persons
+            detailContactVC.contactInformatios = contactInformatios
+        }
+    }
+    
 }
 
 extension ContactTableViewController {
@@ -62,6 +71,13 @@ extension ContactTableViewController {
             )
             
             persons.append(person)
+        }
+    }
+    
+    private func getContactInfo() {
+        for person in persons {
+            let contacts: [String] = [person.phone, person.email]
+            contactInformatios.append(contacts)
         }
     }
 
